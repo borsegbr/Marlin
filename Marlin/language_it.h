@@ -37,6 +37,7 @@
 #define MSG_BACK                            _UxGT("Indietro")
 #define MSG_SD_INSERTED                     _UxGT("SD Card inserita")
 #define MSG_SD_REMOVED                      _UxGT("SD Card rimossa")
+#define MSG_FILAMENT_ERROR                  _UxGT("Nessun Filamento")
 #define MSG_LCD_ENDSTOPS                    _UxGT("Endstop")
 #define MSG_MAIN                            _UxGT("Menu principale")
 #define MSG_AUTOSTART                       _UxGT("Autostart")
@@ -169,6 +170,9 @@
 #define MSG_MOVE_Y                          _UxGT("Muovi Y")
 #define MSG_MOVE_Z                          _UxGT("Muovi Z")
 #define MSG_MOVE_E                          _UxGT("Estrusore")
+#ifndef MSG_HOTEND_TOO_COLD
+  #define MSG_HOTEND_TOO_COLD                 _UxGT("Hotend freddo") 
+#endif
 #define MSG_MOVE_01MM                       _UxGT("Muovi di 0.1mm")
 #define MSG_MOVE_1MM                        _UxGT("Muovi di   1mm")
 #define MSG_MOVE_10MM                       _UxGT("Muovi di  10mm")
@@ -232,6 +236,8 @@
 #define MSG_FILAMENT                        _UxGT("Filamento")
 #define MSG_VOLUMETRIC_ENABLED              _UxGT("E in mm3")
 #define MSG_FILAMENT_DIAM                   _UxGT("Diam. filo")
+#define MSG_RUNOUT_SENSORS                  _UxGT("Sensore filamento")
+#define MSG_POWER_OUTAGE                    _UxGT("Interruzione corrente")
 #define MSG_FILAMENT_UNLOAD                 _UxGT("Rimuovi mm")
 #define MSG_FILAMENT_LOAD                   _UxGT("Carica mm")
 #define MSG_ADVANCE_K                       _UxGT("K Avanzamento")
@@ -247,6 +253,7 @@
 #define MSG_PAUSE_PRINT                     _UxGT("Pausa")
 #define MSG_RESUME_PRINT                    _UxGT("Riprendi stampa")
 #define MSG_STOP_PRINT                      _UxGT("Arresta stampa")
+#define MSG_CANCEL_PRINT                    _UxGT("Cancella stampa")
 #define MSG_CARD_MENU                       _UxGT("Stampa da SD")
 #define MSG_NO_CARD                         _UxGT("SD non presente")
 #define MSG_DWELL                           _UxGT("Sospensione...")
@@ -346,6 +353,8 @@
 #define MSG_INFO_MIN_TEMP                   _UxGT("Temp min")
 #define MSG_INFO_MAX_TEMP                   _UxGT("Temp max")
 #define MSG_INFO_PSU                        _UxGT("Alimentatore")
+#define MSG_HW_VER                          _UxGT("HW Ver: V")
+#define MSG_FW_VER                          _UxGT("FW Ver: V1.1.9.x")
 
 #define MSG_DRIVE_STRENGTH                  _UxGT("Potenza Drive")
 #define MSG_DAC_PERCENT                     _UxGT("Driver %")

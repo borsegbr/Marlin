@@ -88,6 +88,13 @@
 #include "speed_lookuptable.h"
 #include "delay.h"
 
+#include "configuration_store.h"
+#include "printcounter.h"
+//#include "buzzer.h"
+
+//extern Buzzer buzzer;
+
+
 #if HAS_DIGIPOTSS
   #include <SPI.h>
 #endif
@@ -1147,6 +1154,58 @@ void Stepper::set_directions() {
  */
 
 HAL_STEP_TIMER_ISR {
+
+  //
+  // Filament Runout
+  //
+  static bool test; // = false
+  //if (READ(FIL_RUNOUT_PIN) && powerloss.P_file_name[0] && powerloss.recovery == Rec_Idle && print_job_timer.isRunning()) {
+  if (filament_runout_enabled) {
+    if(READ(FIL_RUNOUT_PIN)
+      && ((powerloss.P_file_name[0] && powerloss.recovery == Rec_Idle && print_job_timer.isRunning()) || !test)
+    ) {
+      test = true;
+      //buzzer.tone(400, 5000);
+      //SERIAL_ECHOLN("filament out");
+      LCD_MESSAGEPGM(MSG_FILAMENT_ERROR);
+      if (print_job_timer.isRunning()) powerloss.recovery = Rec_FilRunout;
+    }
+    if (test && !READ(FIL_RUNOUT_PIN)) {
+      //SERIAL_ECHOLN("filament ok");
+      LCD_MESSAGEPGM(WELCOME_MSG);
+      test = false;
+    }
+  }
+
+  //
+  // Power Outage
+  //
+  if (!READ(CONTINUITY_PIN) && powerloss.P_file_name[0] && powerloss.recovery == Rec_Idle && print_job_timer.isRunning()) {
+    //SERIAL_ECHOLNPGM("Down");
+    // enqueuecommand("M929");
+
+    powerloss.Z_t = current_position[Z_AXIS] * 10;
+    powerloss.E_t = current_position[E_AXIS];
+    powerloss.pos_t = card.getStatus();
+    powerloss.T0_t = thermalManager.degTargetHotend(0) + 0.5;
+    powerloss.B_t = thermalManager.degTargetBed() + 0.5;
+    powerloss.recovery =
+      #if ENABLED(BLTOUCH)
+        Rec_Idle
+      #else
+        Rec_Outage
+      #endif
+    ;
+    //settings.save();
+    (void)settings.poweroff_save();
+    settings.load();
+
+    char tmp_d[32];
+    sprintf_P(tmp_d, PSTR("Z%u,E%lu,P%lu,T%u,B%u,"), powerloss.Z_t, powerloss.E_t, powerloss.pos_t, powerloss.T0_t, powerloss.B_t);
+    SERIAL_ECHO(tmp_d);
+    SERIAL_ECHOLN(powerloss.P_file_name);
+  }
+
   HAL_timer_isr_prologue(STEP_TIMER_NUM);
 
   Stepper::isr();
@@ -1178,6 +1237,8 @@ void Stepper::isr() {
 
     // Run main stepping pulse phase ISR if we have to
     if (!nextMainISR) Stepper::stepper_pulse_phase_isr();
+
+
 
     #if ENABLED(LIN_ADVANCE)
       // Run linear advance stepper ISR if we have to

@@ -242,6 +242,8 @@ else ifeq ($(HARDWARE_MOTHERBOARD),321)
 else ifeq ($(HARDWARE_MOTHERBOARD),74)
 # Geeetech GT2560 Rev. A+ (with auto level probe)
 else ifeq ($(HARDWARE_MOTHERBOARD),75)
+# Geeetech GT2560 v3 (with auto level probe)
+else ifeq ($(HARDWARE_MOTHERBOARD),76)
 
 #
 # ATmega1281, ATmega2561

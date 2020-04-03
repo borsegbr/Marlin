@@ -52,6 +52,7 @@
   void lcd_status_printf_P(const uint8_t level, const char * const fmt, ...);
   void lcd_kill_screen();
   void kill_screen(const char* lcd_msg);
+  void lcd_goto_resume_menu(void);
 
   extern uint8_t lcdDrawUpdate;
   inline void lcd_refresh() { lcdDrawUpdate = LCDVIEW_CLEAR_CALL_REDRAW; }
@@ -77,6 +78,16 @@
   #if ENABLED(DOGLCD)
     extern int16_t lcd_contrast;
     void set_lcd_contrast(const int16_t value);
+    #define SETCURSOR(col, row) u8g.setPrintPos(col * (DOG_CHAR_WIDTH), (row + 1) * row_height)
+    #define SETCURSOR_RJ(len, row) u8g.setPrintPos(LCD_PIXEL_WIDTH - len * (DOG_CHAR_WIDTH), (row + 1) * row_height)
+    #define LCDPRINT(p) u8g.print(p)
+    #define LCDWRITE(c) u8g.print(c)
+  #else
+    #define SETCURSOR(col, row) lcd.setCursor(col, row)
+    #define SETCURSOR_RJ(len, row) lcd.setCursor(LCD_WIDTH - len, row)
+    #define LCDPRINT(p) lcd.print(p)
+    #define LCDWRITE(c) lcd.write(c)
+  
   #endif
 
   #if ENABLED(SHOW_BOOTSCREEN)

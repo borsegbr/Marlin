@@ -658,7 +658,8 @@ FORCE_INLINE void _draw_heater_status(const int8_t heater, const char prefix, co
     const float t1 = thermalManager.degHotend(heater), t2 = thermalManager.degTargetHotend(heater);
   #endif
 
-  if (prefix >= 0) lcd.print(prefix);
+  //if (prefix >= 0) lcd.print(prefix);
+  lcd.print((char)prefix);
 
   lcd.print(itostr3(t1 + 0.5));
   lcd.write('/');
@@ -682,11 +683,11 @@ FORCE_INLINE void _draw_heater_status(const int8_t heater, const char prefix, co
   #endif
       lcd.print(itostr3left(t2 + 0.5));
 
-  if (prefix >= 0) {
+  //if (prefix >= 0) {
     lcd.print((char)LCD_DEGREE_CHAR);
     lcd.write(' ');
     if (t2 < 10) lcd.write(' ');
-  }
+  //}
 }
 
 #if ENABLED(LCD_PROGRESS_BAR)
